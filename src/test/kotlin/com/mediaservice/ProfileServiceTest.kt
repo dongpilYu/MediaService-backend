@@ -25,7 +25,7 @@ class ProfileServiceTest(@Mock val profileRepository: ProfileRepository) {
     fun setUp() {
         this.userId = UUID.randomUUID()
         this.profileId = UUID.randomUUID()
-        this.user = User(userId, "test@emai.com", "password")
+        this.user = User(userId, "test@emai.com", "password", true)
         this.profile = Profile(profileId, user, "action", "19+", "image_url")
     }
 
