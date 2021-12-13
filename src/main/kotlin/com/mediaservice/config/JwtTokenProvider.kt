@@ -18,9 +18,11 @@ class JwtTokenProvider(env: Environment) {
     val signingKey = env.getProperty("JWT.secret")?.toByteArray()
     val validTime = 1000L * 60 * 60 * 24 * 7
 
-    fun createToken(ID: UUID): String {
+    fun createToken(ID: UUID, admin: Boolean): String {
         val now = Date()
         val claims = Jwts.claims().setSubject(ID.toString())
+        claims["admin"] = admin
+
         return Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(now)
