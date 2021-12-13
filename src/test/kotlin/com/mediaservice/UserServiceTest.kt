@@ -29,7 +29,7 @@ class UserServiceTest(
     @BeforeEach
     fun setUp() {
         this.id = UUID.randomUUID()
-        this.user = User(id, "test@gmail.com", "1234")
+        this.user = User(id, "test@gmail.com", "1234", true)
         this.requestDto = UserRequestDto("test@gmail.com", "1234")
     }
 
@@ -68,7 +68,7 @@ class UserServiceTest(
         // given
         given(this.userRepository.findByEmail(this.requestDto.email)).willReturn(this.user)
         given(this.passwordEncoder.matches(this.requestDto.password, this.user.password)).willReturn(true)
-        given(this.tokenProvider.createToken(this.user.id)).willReturn("valid token")
+        given(this.tokenProvider.createToken(this.user.id, true)).willReturn("valid token")
 
         // when
         val token = this.userService.signIn(this.requestDto)
