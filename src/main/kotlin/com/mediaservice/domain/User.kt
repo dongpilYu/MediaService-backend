@@ -37,4 +37,3 @@ class UserEntity(id: EntityID<UUID>) : UUIDEntity(id) {
     var password by UserTable.password
     var role by UserTable.role
 }
-

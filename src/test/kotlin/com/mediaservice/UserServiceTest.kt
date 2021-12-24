@@ -1,10 +1,10 @@
 package com.mediaservice
 
-import com.mediaservice.config.JwtTokenProvider
 import com.mediaservice.application.UserService
 import com.mediaservice.application.dto.UserRequestDto
 import com.mediaservice.application.dto.UserResponseDto
 import com.mediaservice.domain.Role
+import com.mediaservice.config.JwtTokenProvider
 import com.mediaservice.domain.User
 import com.mediaservice.domain.repository.UserRepository
 import org.junit.jupiter.api.BeforeEach
@@ -77,6 +77,4 @@ class UserServiceTest(
         // then
         assert(token == "valid token")
     }
-
-
 }
