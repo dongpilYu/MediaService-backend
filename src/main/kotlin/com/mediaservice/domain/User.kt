@@ -7,7 +7,7 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.Column
 import java.util.UUID
 
-enum class Role{
+enum class Role {
     ADMIN,
     USER
 }
@@ -16,7 +16,6 @@ object UserTable : UUIDTable("TB_USER") {
     val email: Column<String> = varchar("email", 255).uniqueIndex()
     val password: Column<String> = varchar("password", 255)
     val role = enumerationByName("role", 255, Role::class)
-
 }
 
 class User(var id: UUID, var email: String, var password: String, var role: Role) {
