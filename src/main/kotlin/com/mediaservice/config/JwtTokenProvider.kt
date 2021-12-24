@@ -1,5 +1,6 @@
 package com.mediaservice.config
 
+import com.mediaservice.domain.Role
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
 import io.jsonwebtoken.Jwts
@@ -18,10 +19,10 @@ class JwtTokenProvider(env: Environment) {
     val signingKey = env.getProperty("JWT.secret")?.toByteArray()
     val validTime = 1000L * 60 * 60 * 24 * 7
 
-    fun createToken(ID: UUID, admin: Boolean): String {
+    fun createToken(ID: UUID, role: Role): String {
         val now = Date()
         val claims = Jwts.claims().setSubject(ID.toString())
-        claims["admin"] = admin
+        claims.put("role", role)
 
         return Jwts.builder()
             .setClaims(claims)

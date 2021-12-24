@@ -5,7 +5,6 @@ import com.mediaservice.application.dto.UserResponseDto
 import com.mediaservice.config.JwtTokenProvider
 import com.mediaservice.domain.repository.UserRepository
 import com.mediaservice.exception.BadRequestException
-import com.mediaservice.exception.DataNotFoundException
 import com.mediaservice.exception.ErrorCode
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -47,7 +46,7 @@ class UserService(
         val userForLogin = userRepository.findByEmail(userRequestDto.email)
             ?: throw BadRequestException(ErrorCode.INVALID_SIGN_IN, "WRONG EMAIL ${userRequestDto.email}")
         return if (passwordEncoder.matches(userRequestDto.password, userForLogin.password)) {
-            tokenProvider.createToken(userForLogin.id, userForLogin.admin)
+            tokenProvider.createToken(userForLogin.id, userForLogin.role)
         } else {
             throw BadRequestException(ErrorCode.INVALID_SIGN_IN, "WRONG PASSWORD")
         }
