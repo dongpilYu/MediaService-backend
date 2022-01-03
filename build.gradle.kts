@@ -33,6 +33,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.exposed:exposed-spring-boot-starter:0.36.2")
     implementation("io.springfox:springfox-boot-starter:3.0.0")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")
@@ -44,9 +45,8 @@ dependencies {
 
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.mockito:mockito-core")
-    testImplementation("org.junit.jupiter:junit-jupiter-api")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("io.mockk:mockk:1.9.3")
+    testImplementation("org.jetbrains.kotlin", "kotlin-test-junit5", "1.5.0")
 }
 
 tasks.withType<KotlinCompile> {
