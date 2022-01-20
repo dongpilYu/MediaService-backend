@@ -1,7 +1,7 @@
 package com.mediaservice
 
 import com.mediaservice.application.MediaSeriesService
-import com.mediaservice.application.dto.MediaAllSeriesResponseDto
+import com.mediaservice.application.dto.media.MediaAllSeriesResponseDto
 import com.mediaservice.domain.Media
 import com.mediaservice.domain.MediaAllSeries
 import com.mediaservice.domain.MediaSeries
@@ -42,7 +42,8 @@ class MediaSeriesServiceTest {
             "test thumbnail url", "19+", true
         )
         this.mediaSeries = MediaSeries(mediaSeriesId, "season 1", 1, this.mediaAllSeries)
-        this.media = Media(mediaId, "test video 1", "test synopsis", 1, this.mediaSeries)
+        this.media =
+            Media(mediaId, "test video 1", "test synopsis", 1, "test url", "test thumbnail", 100, this.mediaSeries)
     }
 
     @Test
