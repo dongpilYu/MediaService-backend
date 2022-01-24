@@ -15,4 +15,14 @@ class ProfileRepository {
     fun findByUserId(id: UUID): List<Profile> {
         return ProfileEntity.find { ProfileTable.user_id eq id }.map { Profile.from(it) }
     }
+
+    fun save(profile : Profile): Profile {
+        return ProfileEntity.new {
+            name = profile.name
+            mainImage = profile.mainImage
+            rate = profile.rate
+        }.let {
+            Profile.from(it)
+        }
+    }
 }
