@@ -1,17 +1,21 @@
 package com.mediaservice
 
 import com.mediaservice.application.ProfileService
+import com.mediaservice.application.dto.user.ProfileCreateDto
+import com.mediaservice.application.dto.user.ProfileCreateResponseDto
 import com.mediaservice.application.dto.user.ProfileResponseDto
 import com.mediaservice.application.dto.user.SignInProfileResponseDto
 import com.mediaservice.domain.Profile
 import com.mediaservice.domain.Role
 import com.mediaservice.domain.User
 import com.mediaservice.domain.repository.ProfileRepository
+import com.mediaservice.domain.repository.UserRepository
 import com.mediaservice.exception.BadRequestException
 import com.mediaservice.exception.ErrorCode
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -19,12 +23,15 @@ import java.util.UUID
 import kotlin.test.assertEquals
 
 class ProfileServiceTest {
+
     private var profileRepository = mockk<ProfileRepository>()
-    private var profileService: ProfileService = ProfileService(this.profileRepository)
+    private var userRepository = mockk<UserRepository>()
+    private var profileService: ProfileService = ProfileService(this.profileRepository, this.userRepository)
     private lateinit var profile: Profile
     private lateinit var user: User
     private lateinit var userId: UUID
     private lateinit var profileId: UUID
+    private lateinit var profileCreateDto: ProfileCreateDto
 
     @BeforeEach
     fun setUp() {
@@ -33,6 +40,7 @@ class ProfileServiceTest {
         this.profileId = UUID.randomUUID()
         this.user = User(userId, "test@emai.com", "password", Role.USER)
         this.profile = Profile(profileId, user, "action", "19+", "image_url")
+        this.profileCreateDto = ProfileCreateDto("action", "19+", "image_url")
     }
 
     @Test
@@ -71,5 +79,22 @@ class ProfileServiceTest {
 
         // then
         assertEquals(this.profile.name, signInProfileResponseDto[0].name)
+    }
+
+    @Test
+    fun successCreateProfile() {
+        // given
+        every {
+            profileRepository.save(any())
+        } returns profile
+        every {
+            userRepository.findById(userId)
+        } returns user
+
+        // when
+        val profileCreateResponseDto = profileService.createProfile(profileCreateDto, userId)
+
+        // then
+        assertEquals(profileCreateDto.mainImage, profileCreateResponseDto.mainImage)
     }
 }
