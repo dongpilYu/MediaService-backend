@@ -1,7 +1,7 @@
 package com.mediaservice.application.dto.user
 
 import com.mediaservice.domain.Profile
-import java.util.*
+import java.util.UUID
 
 data class ProfileCreateResponseDto(
     val profileId: UUID,
