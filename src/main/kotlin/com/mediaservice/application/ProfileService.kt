@@ -45,7 +45,8 @@ class ProfileService(
                         name = profileCreateDto.name,
                         rate = profileCreateDto.rate,
                         mainImage = profileCreateDto.mainImage,
-                        user = user
+                        user = user,
+                        isDeleted = true
                 )
             )
         )
