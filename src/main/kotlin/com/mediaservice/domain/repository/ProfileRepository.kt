@@ -19,7 +19,7 @@ class ProfileRepository {
         }.map { Profile.from(it) }
     }
 
-    fun save(profile : Profile): Profile {
+    fun save(profile: Profile): Profile {
         return ProfileEntity.new {
             name = profile.name
             mainImage = profile.mainImage

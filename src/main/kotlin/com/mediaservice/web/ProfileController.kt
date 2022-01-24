@@ -25,8 +25,8 @@ class ProfileController(private val profileService: ProfileService) {
 
     @PostMapping("/create-profile")
     fun createProfile(
-            @RequestBody profileCreateDto: ProfileCreateDto,
-            @AuthenticationPrincipal member : User
+        @RequestBody profileCreateDto: ProfileCreateDto,
+        @AuthenticationPrincipal member: User
     ): ProfileCreateResponseDto? {
         return member.id?.let { this.profileService.createProfile(profileCreateDto, it) }
     }

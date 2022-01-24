@@ -15,8 +15,8 @@ import java.util.UUID
 
 @Service
 class ProfileService(
-        private val profileRepository: ProfileRepository,
-        private val userRepository: UserRepository
+    private val profileRepository: ProfileRepository,
+    private val userRepository: UserRepository
 ) {
 
     @Transactional(readOnly = true)
@@ -34,25 +34,21 @@ class ProfileService(
     }
 
     @Transactional(readOnly = true)
-    fun createProfile(profileCreateDto : ProfileCreateDto, userId : UUID) : ProfileCreateResponseDto {
+    fun createProfile(profileCreateDto: ProfileCreateDto, userId: UUID): ProfileCreateResponseDto {
 
         val user = userRepository.findById(userId)
-                ?: throw BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH USER $userId")
+            ?: throw BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH USER $userId")
 
         return ProfileCreateResponseDto.from(
-                this.profileRepository.save(
+            this.profileRepository.save(
                 Profile.of(
-                        name = profileCreateDto.name,
-                        rate = profileCreateDto.rate,
-                        mainImage = profileCreateDto.mainImage,
-                        user = user,
-                        isDeleted = true
+                    name = profileCreateDto.name,
+                    rate = profileCreateDto.rate,
+                    mainImage = profileCreateDto.mainImage,
+                    user = user,
+                    isDeleted = true
                 )
             )
         )
-
     }
-
-
-
 }
