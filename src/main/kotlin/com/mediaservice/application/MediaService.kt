@@ -1,6 +1,6 @@
 package com.mediaservice.application
 
-import com.mediaservice.application.dto.MediaResponseDto
+import com.mediaservice.application.dto.media.MediaResponseDto
 import com.mediaservice.domain.repository.MediaRepository
 import com.mediaservice.exception.BadRequestException
 import com.mediaservice.exception.ErrorCode
@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Service
-class MediaService(private val mediaRepository: MediaRepository) {
+class MediaService(
+    private val mediaRepository: MediaRepository
+) {
     @Transactional(readOnly = true)
     fun findById(id: UUID): MediaResponseDto {
         return MediaResponseDto.from(

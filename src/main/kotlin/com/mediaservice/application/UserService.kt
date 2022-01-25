@@ -1,8 +1,10 @@
 package com.mediaservice.application
 
-import com.mediaservice.application.dto.SignInRequestDto
-import com.mediaservice.application.dto.SignUpRequestDto
-import com.mediaservice.application.dto.UserResponseDto
+import com.mediaservice.application.dto.user.SignInRequestDto
+import com.mediaservice.application.dto.user.SignUpRequestDto
+import com.mediaservice.application.dto.user.UserResponseDto
+import com.mediaservice.application.validator.PasswordValidator
+import com.mediaservice.application.validator.Validator
 import com.mediaservice.config.JwtTokenProvider
 import com.mediaservice.domain.Role
 import com.mediaservice.domain.User
@@ -30,7 +32,7 @@ class UserService(
     @Transactional
     fun signUp(signUpRequestDto: SignUpRequestDto): UserResponseDto {
         if (this.userRepository.findByEmail(signUpRequestDto.email) != null) {
-            throw BadRequestException(ErrorCode.ROW_ALREADY_EXIST, "DUPLICATE_EMAIL")
+            throw BadRequestException(ErrorCode.ROW_ALREADY_EXIST, "DUPLICATE EMAIL")
         }
 
         return UserResponseDto.from(
@@ -47,13 +49,12 @@ class UserService(
     @Transactional(readOnly = true)
     fun signIn(signInRequestDto: SignInRequestDto): String {
         // TODO: singIn is just for 'select' of profiles
-        val userForLogin = userRepository.findByEmail(signInRequestDto.email)
+        val userForLogin = this.userRepository.findByEmail(signInRequestDto.email)
             ?: throw BadRequestException(ErrorCode.INVALID_SIGN_IN, "WRONG EMAIL ${signInRequestDto.email}")
 
-        return if (signInRequestDto.password == userForLogin.password) {
-            tokenProvider.createToken(userForLogin.id!!, userForLogin.role)
-        } else {
-            throw BadRequestException(ErrorCode.INVALID_SIGN_IN, "WRONG PASSWORD")
-        }
+        val validator: Validator = PasswordValidator(signInRequestDto.password, userForLogin.password)
+
+        validator.validate()
+        return tokenProvider.createToken(userForLogin.id!!, userForLogin.role)
     }
 }
