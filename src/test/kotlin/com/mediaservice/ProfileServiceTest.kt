@@ -1,7 +1,7 @@
 package com.mediaservice
 
 import com.mediaservice.application.ProfileService
-import com.mediaservice.application.dto.user.ProfileCreateDto
+import com.mediaservice.application.dto.user.ProfileCreateRequestDto
 import com.mediaservice.application.dto.user.ProfileResponseDto
 import com.mediaservice.application.dto.user.SignInProfileResponseDto
 import com.mediaservice.domain.Profile
@@ -28,7 +28,7 @@ class ProfileServiceTest {
     private lateinit var user: User
     private lateinit var userId: UUID
     private lateinit var profileId: UUID
-    private lateinit var profileCreateDto: ProfileCreateDto
+    private lateinit var profileCreateRequestDto: ProfileCreateRequestDto
 
     @BeforeEach
     fun setUp() {
@@ -37,7 +37,7 @@ class ProfileServiceTest {
         this.profileId = UUID.randomUUID()
         this.user = User(userId, "test@emai.com", "password", Role.USER)
         this.profile = Profile(profileId, user, "action", "19+", "image_url", true)
-        this.profileCreateDto = ProfileCreateDto("action", "19+", "image_url")
+        this.profileCreateRequestDto = ProfileCreateRequestDto("action", "19+", "image_url")
     }
 
     @Test
@@ -89,9 +89,9 @@ class ProfileServiceTest {
         } returns user
 
         // when
-        val profileCreateResponseDto = profileService.createProfile(profileCreateDto, userId)
+        val profileCreateResponseDto = profileService.createProfile(profileCreateRequestDto, userId)
 
         // then
-        assertEquals(profileCreateDto.mainImage, profileCreateResponseDto.mainImage)
+        assertEquals(profileCreateRequestDto.mainImage, profileCreateResponseDto.mainImage)
     }
 }
