@@ -29,6 +29,7 @@ class ProfileServiceTest {
     private lateinit var userId: UUID
     private lateinit var profileId: UUID
     private lateinit var profileCreateRequestDto: ProfileCreateRequestDto
+    private lateinit var profileList: MutableList<Profile>
 
     @BeforeEach
     fun setUp() {
@@ -38,6 +39,11 @@ class ProfileServiceTest {
         this.user = User(userId, "test@emai.com", "password", Role.USER)
         this.profile = Profile(profileId, user, "action", "19+", "image_url", true)
         this.profileCreateRequestDto = ProfileCreateRequestDto("action", "19+", "image_url")
+        this.profileList = mutableListOf()
+        for(i: Int in 1..5) {
+            user = User.of("email + $i", "password + $i", Role.USER)
+            profileList.add(Profile.of(user, "mainImage + $i", "rate + $i", "name + $i"))
+        }
     }
 
     @Test
@@ -49,7 +55,7 @@ class ProfileServiceTest {
         val profileResponseDto: ProfileResponseDto = this.profileService.findById(this.profileId)
 
         // then
-        assertEquals(this.profile.name, profileResponseDto.name)
+        assertEquals(this.profile.mainImage, profileResponseDto.mainImage)
     }
 
     @Test
@@ -93,5 +99,37 @@ class ProfileServiceTest {
 
         // then
         assertEquals(profileCreateRequestDto.mainImage, profileCreateResponseDto.mainImage)
+    }
+
+    @Test
+    fun failCreateProfile_noMoreProfiles(){
+        // given
+        val exception = assertThrows(BadRequestException::class.java) {
+            every{
+                userRepository.findById(userId)
+            } returns user
+            every {
+               profileRepository.findByUserId(userId)
+            } returns profileList
+            // when
+            profileService.createProfile(profileCreateRequestDto, userId)
+        }
+        // then
+        assertEquals(ErrorCode.NO_MORE_ITEM, exception.errorCode)
+
+    }
+
+    @Test
+    fun failCreateProfile_noUser(){
+        // given
+        val exception = assertThrows(BadRequestException::class.java) {
+            every {
+                userRepository.findById(any())
+            } returns null
+            // when
+            profileService.createProfile(profileCreateRequestDto, userId)
+        }
+        // then
+        assertEquals(ErrorCode.ROW_DOES_NOT_EXIST, exception.errorCode)
     }
 }

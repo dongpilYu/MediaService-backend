@@ -1,9 +1,10 @@
 package com.mediaservice.application
 
 import com.mediaservice.application.dto.user.ProfileCreateRequestDto
-import com.mediaservice.application.dto.user.ProfileCreateResponseDto
 import com.mediaservice.application.dto.user.ProfileResponseDto
 import com.mediaservice.application.dto.user.SignInProfileResponseDto
+import com.mediaservice.application.validator.ProfileNumberValidator
+import com.mediaservice.application.validator.Validator
 import com.mediaservice.domain.Profile
 import com.mediaservice.domain.repository.ProfileRepository
 import com.mediaservice.domain.repository.UserRepository
@@ -33,20 +34,24 @@ class ProfileService(
             .map { profile -> SignInProfileResponseDto.from(profile) }
     }
 
-    @Transactional(readOnly = true)
-    fun createProfile(profileCreateRequestDto: ProfileCreateRequestDto, userId: UUID): ProfileCreateResponseDto {
+    @Transactional
+    fun createProfile(profileCreateRequestDto: ProfileCreateRequestDto, userId: UUID): ProfileResponseDto {
 
         val user = userRepository.findById(userId)
             ?: throw BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH USER $userId")
 
-        return ProfileCreateResponseDto.from(
+        val profileList = profileRepository.findByUserId(userId)
+
+        val validator: Validator = ProfileNumberValidator(profileList.size, userId)
+        validator.validate()
+
+        return ProfileResponseDto.from(
             this.profileRepository.save(
                 Profile.of(
                     name = profileCreateRequestDto.name,
                     rate = profileCreateRequestDto.rate,
                     mainImage = profileCreateRequestDto.mainImage,
-                    user = user,
-                    isDeleted = true
+                    user = user
                 )
             )
         )

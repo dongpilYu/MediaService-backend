@@ -2,7 +2,6 @@ package com.mediaservice.web
 
 import com.mediaservice.application.ProfileService
 import com.mediaservice.application.dto.user.ProfileCreateRequestDto
-import com.mediaservice.application.dto.user.ProfileCreateResponseDto
 import com.mediaservice.application.dto.user.ProfileResponseDto
 import com.mediaservice.application.dto.user.SignInProfileResponseDto
 import com.mediaservice.domain.User
@@ -28,11 +27,11 @@ class ProfileController(private val profileService: ProfileService) {
         return this.profileService.findByUserId(id)
     }
 
-    @PostMapping("/create-profile")
+    @PostMapping("/create")
     fun createProfile(
-            @RequestBody profileCreateRequestDto: ProfileCreateRequestDto,
-            @AuthenticationPrincipal member: User
-    ): ProfileCreateResponseDto? {
+        @RequestBody profileCreateRequestDto: ProfileCreateRequestDto,
+        @AuthenticationPrincipal member: User
+    ): ProfileResponseDto? {
         return member.id?.let { this.profileService.createProfile(profileCreateRequestDto, it) }
     }
 }

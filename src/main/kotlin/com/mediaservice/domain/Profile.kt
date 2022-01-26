@@ -33,13 +33,13 @@ class Profile(
             isDeleted = profileEntity.isDeleted
         )
 
-        fun of(user: User, mainImage: String, rate: String, name: String, isDeleted: Boolean) = Profile(
+        fun of(user: User, mainImage: String, rate: String, name: String) = Profile(
             id = null,
             user = user,
             name = name,
             rate = rate,
             mainImage = mainImage,
-            isDeleted = isDeleted
+            isDeleted = false
         )
     }
 }
