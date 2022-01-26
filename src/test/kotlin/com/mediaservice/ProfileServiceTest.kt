@@ -40,7 +40,7 @@ class ProfileServiceTest {
         this.profile = Profile(profileId, user, "action", "19+", "image_url", true)
         this.profileCreateRequestDto = ProfileCreateRequestDto("action", "19+", "image_url")
         this.profileList = mutableListOf()
-        for(i: Int in 1..5) {
+        for (i: Int in 1..5) {
             user = User.of("email + $i", "password + $i", Role.USER)
             profileList.add(Profile.of(user, "mainImage + $i", "rate + $i", "name + $i"))
         }
@@ -102,25 +102,24 @@ class ProfileServiceTest {
     }
 
     @Test
-    fun failCreateProfile_noMoreProfiles(){
+    fun failCreateProfile_noMoreProfiles() {
         // given
         val exception = assertThrows(BadRequestException::class.java) {
-            every{
+            every {
                 userRepository.findById(userId)
             } returns user
             every {
-               profileRepository.findByUserId(userId)
+                profileRepository.findByUserId(userId)
             } returns profileList
             // when
             profileService.createProfile(profileCreateRequestDto, userId)
         }
         // then
         assertEquals(ErrorCode.NO_MORE_ITEM, exception.errorCode)
-
     }
 
     @Test
-    fun failCreateProfile_noUser(){
+    fun failCreateProfile_noUser() {
         // given
         val exception = assertThrows(BadRequestException::class.java) {
             every {
