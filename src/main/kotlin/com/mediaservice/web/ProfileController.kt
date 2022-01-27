@@ -30,8 +30,8 @@ class ProfileController(private val profileService: ProfileService) {
     @PostMapping("/create")
     fun createProfile(
         @RequestBody profileCreateRequestDto: ProfileCreateRequestDto,
-        @AuthenticationPrincipal member: User
+        @AuthenticationPrincipal userId: String
     ): ProfileResponseDto? {
-        return member.id?.let { this.profileService.createProfile(profileCreateRequestDto, it) }
+        return profileService.createProfile(profileCreateRequestDto, UUID.fromString(userId))
     }
 }
