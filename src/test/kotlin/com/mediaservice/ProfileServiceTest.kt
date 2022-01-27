@@ -37,7 +37,7 @@ class ProfileServiceTest {
         this.userId = UUID.randomUUID()
         this.profileId = UUID.randomUUID()
         this.user = User(userId, "test@emai.com", "password", Role.USER)
-        this.profile = Profile(profileId, user, "action", "19+", "image_url", true)
+        this.profile = Profile(profileId, user, "action", "19+", "image_url", false)
         this.profileCreateRequestDto = ProfileCreateRequestDto("action", "19+", "image_url")
         this.profileList = mutableListOf()
         for (i: Int in 1..5) {
@@ -91,7 +91,10 @@ class ProfileServiceTest {
             profileRepository.save(any())
         } returns profile
         every {
-            userRepository.findById(userId)
+            profileRepository.findByUserId(any())
+        } returns emptyList()
+        every {
+            userRepository.findById(any())
         } returns user
 
         // when
