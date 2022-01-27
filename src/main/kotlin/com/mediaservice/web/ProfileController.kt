@@ -26,7 +26,7 @@ class ProfileController(private val profileService: ProfileService) {
         return this.profileService.findByUserId(id)
     }
 
-    @PostMapping("/create")
+    @PostMapping("/")
     fun createProfile(
         @RequestBody profileCreateRequestDto: ProfileCreateRequestDto,
         @AuthenticationPrincipal userId: String
