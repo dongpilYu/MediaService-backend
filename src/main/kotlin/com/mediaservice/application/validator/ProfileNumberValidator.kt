@@ -2,7 +2,7 @@ package com.mediaservice.application.validator
 
 import com.mediaservice.exception.BadRequestException
 import com.mediaservice.exception.ErrorCode
-import java.util.*
+import java.util.UUID
 
 class ProfileNumberValidator(
     private val num: Int,
