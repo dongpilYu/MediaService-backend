@@ -19,7 +19,7 @@ class ProfileRepository {
         }.map { Profile.from(it) }
     }
 
-    fun update(profile : Profile) : Profile? {
+    fun update(profile: Profile): Profile? {
         return ProfileEntity.findById(profile.id)?.let {
             it.name = profile.name
             it.mainImage = profile.mainImage
@@ -28,4 +28,3 @@ class ProfileRepository {
         }
     }
 }
-

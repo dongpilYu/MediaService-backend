@@ -31,10 +31,10 @@ class ProfileService(private val profileRepository: ProfileRepository) {
     }
 
     @Transactional
-    fun updateProfile(profileId : UUID, profileUpdateRequestDto : ProfileUpdateRequestDto) : ProfileUpdateResponseDto? {
+    fun updateProfile(profileId: UUID, profileUpdateRequestDto: ProfileUpdateRequestDto): ProfileUpdateResponseDto? {
 
         val profileForUpdate = this.profileRepository.findById(profileId) ?: throw BadRequestException(
-                ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH PROFILE $profileId"
+            ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH PROFILE $profileId"
         )
 
         val validator: Validator = IsDeletedValidator(profileForUpdate.isDeleted, Profile.DOMAIN)
@@ -45,12 +45,11 @@ class ProfileService(private val profileRepository: ProfileRepository) {
         profileForUpdate.name = profileUpdateRequestDto.name
 
         return ProfileUpdateResponseDto.from(
-                this.profileRepository.update(
-                        profileForUpdate
-                ) ?: throw BadRequestException(
-                        ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH PROFILE $profileId"
-                )
+            this.profileRepository.update(
+                profileForUpdate
+            ) ?: throw BadRequestException(
+                ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH PROFILE $profileId"
+            )
         )
-
     }
 }

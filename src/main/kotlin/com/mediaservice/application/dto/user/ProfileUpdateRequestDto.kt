@@ -9,9 +9,9 @@ data class ProfileUpdateRequestDto(
 ) {
     companion object {
         fun from(profile: Profile) = ProfileUpdateRequestDto(
-                name = profile.name,
-                rate = profile.rate,
-                mainImage = profile.mainImage
+            name = profile.name,
+            rate = profile.rate,
+            mainImage = profile.mainImage
         )
     }
 }

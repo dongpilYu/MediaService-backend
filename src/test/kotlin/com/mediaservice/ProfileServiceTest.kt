@@ -8,7 +8,6 @@ import com.mediaservice.domain.Profile
 import com.mediaservice.domain.Role
 import com.mediaservice.domain.User
 import com.mediaservice.domain.repository.ProfileRepository
-import com.mediaservice.domain.repository.UserRepository
 import com.mediaservice.exception.BadRequestException
 import com.mediaservice.exception.ErrorCode
 import io.mockk.clearAllMocks
@@ -28,7 +27,7 @@ class ProfileServiceTest {
     private lateinit var user: User
     private lateinit var profile: Profile
     private lateinit var profileAfterUpdate: Profile
-    private lateinit var profileUpdateRequestDto : ProfileUpdateRequestDto
+    private lateinit var profileUpdateRequestDto: ProfileUpdateRequestDto
 
     @BeforeEach
     fun setUp() {
@@ -80,12 +79,12 @@ class ProfileServiceTest {
     }
 
     @Test
-    fun successUpdateProfile(){
+    fun successUpdateProfile() {
         // given
-        every{
+        every {
             profileRepository.findById(profileId)
         } returns profile
-        every{
+        every {
             profileRepository.update(any())
         } returns profileAfterUpdate
         // when
@@ -97,7 +96,7 @@ class ProfileServiceTest {
     }
 
     @Test
-    fun failUpdateProfile_noProfile(){
+    fun failUpdateProfile_noProfile() {
         // given
         val exception = assertThrows(BadRequestException::class.java) {
             every {
@@ -107,7 +106,6 @@ class ProfileServiceTest {
             profileService.updateProfile(profileId, profileUpdateRequestDto)
         }
         // then
-        assertEquals(ErrorCode.ROW_DOES_NOT_EXIST , exception.errorCode)
+        assertEquals(ErrorCode.ROW_DOES_NOT_EXIST, exception.errorCode)
     }
-
 }
