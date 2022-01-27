@@ -1,7 +1,12 @@
 package com.mediaservice.application
 
 import com.mediaservice.application.dto.user.ProfileResponseDto
+import com.mediaservice.application.dto.user.ProfileUpdateRequestDto
+import com.mediaservice.application.dto.user.ProfileUpdateResponseDto
 import com.mediaservice.application.dto.user.SignInProfileResponseDto
+import com.mediaservice.application.validator.IsDeletedValidator
+import com.mediaservice.application.validator.Validator
+import com.mediaservice.domain.Profile
 import com.mediaservice.domain.repository.ProfileRepository
 import com.mediaservice.exception.BadRequestException
 import com.mediaservice.exception.ErrorCode
@@ -23,5 +28,29 @@ class ProfileService(private val profileRepository: ProfileRepository) {
     fun findByUserId(id: UUID): List<SignInProfileResponseDto> {
         return this.profileRepository.findByUserId(id)
             .map { profile -> SignInProfileResponseDto.from(profile) }
+    }
+
+    @Transactional
+    fun updateProfile(profileId : UUID, profileUpdateRequestDto : ProfileUpdateRequestDto) : ProfileUpdateResponseDto? {
+
+        val profileForUpdate = this.profileRepository.findById(profileId) ?: throw BadRequestException(
+                ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH PROFILE $profileId"
+        )
+
+        val validator: Validator = IsDeletedValidator(profileForUpdate.isDeleted, Profile.DOMAIN)
+        validator.validate()
+
+        profileForUpdate.rate = profileUpdateRequestDto.rate
+        profileForUpdate.mainImage = profileUpdateRequestDto.mainImage
+        profileForUpdate.name = profileUpdateRequestDto.name
+
+        return ProfileUpdateResponseDto.from(
+                this.profileRepository.update(
+                        profileForUpdate
+                ) ?: throw BadRequestException(
+                        ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH PROFILE $profileId"
+                )
+        )
+
     }
 }

@@ -18,4 +18,14 @@ class ProfileRepository {
             ProfileTable.isDeleted eq false
         }.map { Profile.from(it) }
     }
+
+    fun update(profile : Profile) : Profile? {
+        return ProfileEntity.findById(profile.id)?.let {
+            it.name = profile.name
+            it.mainImage = profile.mainImage
+            it.rate = it.rate
+            return Profile.from(it)
+        }
+    }
 }
+
