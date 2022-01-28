@@ -35,8 +35,6 @@ class Profile(
             isDeleted = profileEntity.isDeleted
         )
     }
-
-
 }
 
 class ProfileEntity(id: EntityID<UUID>) : UUIDEntity(id) {
