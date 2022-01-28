@@ -26,7 +26,7 @@ class ProfileController(private val profileService: ProfileService) {
         return this.profileService.findByUserId(id)
     }
 
-    @PutMapping("/update/{profileId}")
+    @PutMapping("/{profileId}")
     fun updateProfile(
         @PathVariable profileId: UUID,
         @RequestBody profileUpdateRequestDto: ProfileUpdateRequestDto
