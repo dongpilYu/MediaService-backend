@@ -19,6 +19,12 @@ class ProfileRepository {
         }.map { Profile.from(it) }
     }
 
+    fun count(id: UUID): Long {
+        return ProfileEntity.find {
+            ProfileTable.user_id eq id
+        }.count()
+    }
+
     fun save(profile: Profile): Profile {
         return ProfileEntity.new {
             name = profile.name
