@@ -91,10 +91,10 @@ class ProfileServiceTest {
             profileRepository.save(any())
         } returns profile
         every {
-            profileRepository.findByUserId(any())
-        } returns emptyList()
+            profileRepository.count(userId)
+        } returns 0
         every {
-            userRepository.findById(any())
+            userRepository.findById(userId)
         } returns user
 
         // when
@@ -112,8 +112,8 @@ class ProfileServiceTest {
                 userRepository.findById(userId)
             } returns user
             every {
-                profileRepository.findByUserId(userId)
-            } returns profileList
+                profileRepository.count(userId)
+            } returns 5
             // when
             profileService.createProfile(profileCreateRequestDto, userId)
         }
