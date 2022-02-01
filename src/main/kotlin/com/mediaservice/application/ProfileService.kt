@@ -40,9 +40,7 @@ class ProfileService(private val profileRepository: ProfileRepository) {
         val validator: Validator = IsDeletedValidator(profileForUpdate.isDeleted, Profile.DOMAIN)
         validator.validate()
 
-        profileForUpdate.rate = profileUpdateRequestDto.rate
-        profileForUpdate.mainImage = profileUpdateRequestDto.mainImage
-        profileForUpdate.name = profileUpdateRequestDto.name
+        profileForUpdate.updateProfile(profileUpdateRequestDto.name, profileUpdateRequestDto.mainImage, profileUpdateRequestDto.rate)
 
         return ProfileUpdateResponseDto.from(
             this.profileRepository.update(

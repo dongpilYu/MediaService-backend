@@ -35,6 +35,12 @@ class Profile(
             isDeleted = profileEntity.isDeleted
         )
     }
+
+    fun updateProfile(name: String, mainImage: String, rate: String) {
+        this.name = name
+        this.mainImage = mainImage
+        this.rate = rate
+    }
 }
 
 class ProfileEntity(id: EntityID<UUID>) : UUIDEntity(id) {
