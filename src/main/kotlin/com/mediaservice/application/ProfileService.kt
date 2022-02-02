@@ -5,8 +5,8 @@ import com.mediaservice.application.dto.user.ProfileUpdateRequestDto
 import com.mediaservice.application.dto.user.ProfileUpdateResponseDto
 import com.mediaservice.application.dto.user.SignInProfileResponseDto
 import com.mediaservice.application.validator.IsDeletedValidator
-import com.mediaservice.domain.Profile
 import com.mediaservice.application.validator.Validator
+import com.mediaservice.domain.Profile
 import com.mediaservice.domain.repository.ProfileRepository
 import com.mediaservice.exception.BadRequestException
 import com.mediaservice.exception.ErrorCode
