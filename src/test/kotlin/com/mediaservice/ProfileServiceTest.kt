@@ -92,7 +92,7 @@ class ProfileServiceTest {
         // when
         val profileResponseDto = profileService.deleteProfile(profileId)
         // then
-        assertEquals(profileResponseDto.isDeleted, false)
+        assertEquals(profileResponseDto.profileId, profileId)
     }
 
     @Test

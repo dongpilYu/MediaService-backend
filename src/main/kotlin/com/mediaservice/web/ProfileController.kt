@@ -3,7 +3,6 @@ package com.mediaservice.web
 import com.mediaservice.application.ProfileService
 import com.mediaservice.application.dto.user.ProfileResponseDto
 import com.mediaservice.application.dto.user.ProfileUpdateRequestDto
-import com.mediaservice.application.dto.user.ProfileUpdateResponseDto
 import com.mediaservice.application.dto.user.SignInProfileResponseDto
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -36,7 +35,7 @@ class ProfileController(private val profileService: ProfileService) {
     fun updateProfile(
         @PathVariable profileId: UUID,
         @RequestBody profileUpdateRequestDto: ProfileUpdateRequestDto
-    ): ProfileUpdateResponseDto? {
+    ): ProfileResponseDto? {
         return this.profileService.updateProfile(profileId, profileUpdateRequestDto)
     }
 }

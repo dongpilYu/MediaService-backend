@@ -2,7 +2,6 @@ package com.mediaservice.application
 
 import com.mediaservice.application.dto.user.ProfileResponseDto
 import com.mediaservice.application.dto.user.ProfileUpdateRequestDto
-import com.mediaservice.application.dto.user.ProfileUpdateResponseDto
 import com.mediaservice.application.dto.user.SignInProfileResponseDto
 import com.mediaservice.application.validator.IsDeletedValidator
 import com.mediaservice.application.validator.Validator
@@ -49,7 +48,7 @@ class ProfileService(private val profileRepository: ProfileRepository) {
     }
 
     @Transactional
-    fun updateProfile(profileId: UUID, profileUpdateRequestDto: ProfileUpdateRequestDto): ProfileUpdateResponseDto? {
+    fun updateProfile(profileId: UUID, profileUpdateRequestDto: ProfileUpdateRequestDto): ProfileResponseDto? {
 
         val profileForUpdate = this.profileRepository.findById(profileId) ?: throw BadRequestException(
             ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH PROFILE $profileId"
@@ -60,7 +59,7 @@ class ProfileService(private val profileRepository: ProfileRepository) {
 
         profileForUpdate.updateProfile(profileUpdateRequestDto.name, profileUpdateRequestDto.mainImage, profileUpdateRequestDto.rate)
 
-        return ProfileUpdateResponseDto.from(
+        return ProfileResponseDto.from(
             this.profileRepository.update(
                 profileForUpdate
             ) ?: throw BadRequestException(
