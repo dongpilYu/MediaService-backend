@@ -40,7 +40,7 @@ class ProfileService(
         val user = userRepository.findById(userId)
             ?: throw BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH USER $userId")
 
-        val numOfProfiles = profileRepository.count(userId)
+        val numOfProfiles = profileRepository.countByUserId(userId)
 
         val validator: Validator = ProfileNumberValidator(numOfProfiles.toInt(), userId)
         validator.validate()

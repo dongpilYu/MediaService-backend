@@ -19,9 +19,10 @@ class ProfileRepository {
         }.map { Profile.from(it) }
     }
 
-    fun count(id: UUID): Long {
+    fun countByUserId(id: UUID): Long {
         return ProfileEntity.find {
             ProfileTable.user_id eq id
+            ProfileTable.isDeleted eq false
         }.count()
     }
 
