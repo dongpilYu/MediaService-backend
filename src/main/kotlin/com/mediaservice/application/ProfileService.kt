@@ -5,7 +5,6 @@ import com.mediaservice.application.dto.user.ProfileResponseDto
 import com.mediaservice.application.dto.user.ProfileUpdateRequestDto
 import com.mediaservice.application.dto.user.SignInProfileResponseDto
 import com.mediaservice.application.validator.IsDeletedValidator
-import com.mediaservice.application.validator.Validator
 import com.mediaservice.application.validator.ProfileNumberValidator
 import com.mediaservice.application.validator.Validator
 import com.mediaservice.domain.Profile

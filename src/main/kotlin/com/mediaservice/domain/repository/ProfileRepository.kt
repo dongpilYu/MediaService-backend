@@ -44,11 +44,13 @@ class ProfileRepository {
     }
 
     fun update(profile: Profile): Profile? {
-        return ProfileEntity.findById(profile.id)?.let {
-            it.name = profile.name
-            it.mainImage = profile.mainImage
-            it.rate = it.rate
-            return Profile.from(it)
+        return profile.id?.let { uuid ->
+            ProfileEntity.findById(uuid)?.let { profileEntity ->
+                profileEntity.name = profile.name
+                profileEntity.mainImage = profile.mainImage
+                profileEntity.rate = profile.rate
+                return Profile.from(profileEntity)
+            }
         }
     }
 }
