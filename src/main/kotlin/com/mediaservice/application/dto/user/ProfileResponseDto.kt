@@ -4,10 +4,10 @@ import com.mediaservice.domain.Profile
 import java.util.UUID
 
 data class ProfileResponseDto(
-        val profileId: UUID,
-        val mainImage: String,
-        val name: String,
-        val rate: String
+    val profileId: UUID,
+    val mainImage: String,
+    val name: String,
+    val rate: String
 ) {
     companion object {
         fun from(profile: Profile) = ProfileResponseDto(
