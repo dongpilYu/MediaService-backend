@@ -3,11 +3,13 @@ package com.mediaservice
 import com.mediaservice.application.ProfileService
 import com.mediaservice.application.dto.user.ProfileResponseDto
 import com.mediaservice.application.dto.user.ProfileUpdateRequestDto
+import com.mediaservice.application.dto.user.ProfileCreateRequestDto
 import com.mediaservice.application.dto.user.SignInProfileResponseDto
 import com.mediaservice.domain.Profile
 import com.mediaservice.domain.Role
 import com.mediaservice.domain.User
 import com.mediaservice.domain.repository.ProfileRepository
+import com.mediaservice.domain.repository.UserRepository
 import com.mediaservice.exception.BadRequestException
 import com.mediaservice.exception.ErrorCode
 import io.mockk.clearAllMocks
@@ -21,12 +23,14 @@ import kotlin.test.assertEquals
 
 class ProfileServiceTest {
     private var profileRepository = mockk<ProfileRepository>()
-    private var profileService: ProfileService = ProfileService(this.profileRepository)
+    private var userRepository = mockk<UserRepository>()
+    private var profileService: ProfileService = ProfileService(this.profileRepository, this.userRepository)
     private lateinit var userId: UUID
     private lateinit var profileId: UUID
     private lateinit var user: User
     private lateinit var profile: Profile
     private lateinit var profileAlreadyDeleted: Profile
+    private lateinit var profileCreateRequestDto: ProfileCreateRequestDto
     private lateinit var profileAfterUpdate: Profile
     private lateinit var profileUpdateRequestDto: ProfileUpdateRequestDto
 
@@ -40,6 +44,7 @@ class ProfileServiceTest {
         this.profileAlreadyDeleted = Profile(profileId, user, "action", "19+", "image_url", true)
         this.profileAfterUpdate = Profile(profileId, user, "name", "19+", "image_url2", false)
         this.profileUpdateRequestDto = ProfileUpdateRequestDto("name", "19+", "image_url2")
+        this.profileCreateRequestDto = ProfileCreateRequestDto("action", "19+", "image_url")
     }
 
     @Test
@@ -48,10 +53,10 @@ class ProfileServiceTest {
         every { profileRepository.findById(profileId) } returns this.profile
 
         // when
-        val profileResponseDto: ProfileResponseDto = this.profileService.findById(this.profileId)
+        val profileResponseDto = this.profileService.findById(this.profileId)
 
         // then
-        assertEquals(this.profile.name, profileResponseDto.name)
+        assertEquals(this.profile.mainImage, profileResponseDto.mainImage)
     }
 
     @Test
@@ -149,6 +154,57 @@ class ProfileServiceTest {
             } returns null
             // when
             profileService.updateProfile(profileId, profileUpdateRequestDto)
+        }
+        // then
+        assertEquals(ErrorCode.ROW_DOES_NOT_EXIST, exception.errorCode)
+    }
+
+    @Test
+    fun successCreateProfile() {
+        // given
+        every {
+            profileRepository.save(any())
+        } returns profile
+        every {
+            profileRepository.countByUserId(userId)
+        } returns 0
+        every {
+            userRepository.findById(userId)
+        } returns user
+
+        // when
+        val profileResponseDto = profileService.createProfile(profileCreateRequestDto, userId)
+
+        // then
+        assertEquals(profileCreateRequestDto.mainImage, profileResponseDto.mainImage)
+    }
+
+    @Test
+    fun failCreateProfile_noMoreProfiles() {
+        // given
+        val exception = assertThrows(BadRequestException::class.java) {
+            every {
+                userRepository.findById(userId)
+            } returns user
+            every {
+                profileRepository.countByUserId(userId)
+            } returns 5
+            // when
+            profileService.createProfile(profileCreateRequestDto, userId)
+        }
+        // then
+        assertEquals(ErrorCode.NO_MORE_ITEM, exception.errorCode)
+    }
+
+    @Test
+    fun failCreateProfile_noUser() {
+        // given
+        val exception = assertThrows(BadRequestException::class.java) {
+            every {
+                userRepository.findById(any())
+            } returns null
+            // when
+            profileService.createProfile(profileCreateRequestDto, userId)
         }
         // then
         assertEquals(ErrorCode.ROW_DOES_NOT_EXIST, exception.errorCode)
