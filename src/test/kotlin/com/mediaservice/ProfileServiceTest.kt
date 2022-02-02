@@ -24,12 +24,12 @@ class ProfileServiceTest {
     private var profileRepository = mockk<ProfileRepository>()
     private var userRepository = mockk<UserRepository>()
     private var profileService: ProfileService = ProfileService(this.profileRepository, this.userRepository)
-    private lateinit var profile: Profile
-    private lateinit var user: User
     private lateinit var userId: UUID
     private lateinit var profileId: UUID
+    private lateinit var user: User
+    private lateinit var profile: Profile
+    private lateinit var profileAlreadyDeleted: Profile
     private lateinit var profileCreateRequestDto: ProfileCreateRequestDto
-    private lateinit var profileList: MutableList<Profile>
 
     @BeforeEach
     fun setUp() {
@@ -38,12 +38,8 @@ class ProfileServiceTest {
         this.profileId = UUID.randomUUID()
         this.user = User(userId, "test@emai.com", "password", Role.USER)
         this.profile = Profile(profileId, user, "action", "19+", "image_url", false)
+        this.profileAlreadyDeleted = Profile(profileId, user, "action", "19+", "image_url", true)
         this.profileCreateRequestDto = ProfileCreateRequestDto("action", "19+", "image_url")
-        this.profileList = mutableListOf()
-        for (i: Int in 1..5) {
-            user = User.of("email + $i", "password + $i", Role.USER)
-            profileList.add(Profile.of(user, "mainImage + $i", "rate + $i", "name + $i"))
-        }
     }
 
     @Test
@@ -52,7 +48,7 @@ class ProfileServiceTest {
         every { profileRepository.findById(profileId) } returns this.profile
 
         // when
-        val profileResponseDto: ProfileResponseDto = this.profileService.findById(this.profileId)
+        val profileResponseDto = this.profileService.findById(this.profileId)
 
         // then
         assertEquals(this.profile.mainImage, profileResponseDto.mainImage)
@@ -85,6 +81,49 @@ class ProfileServiceTest {
     }
 
     @Test
+    fun successDeleteProfile() {
+        // given
+        every {
+            profileRepository.findById(profileId)
+        } returns profile
+        every {
+            profileRepository.delete(profileId)
+        } returns profile
+        // when
+        val profileResponseDto = profileService.deleteProfile(profileId)
+        // then
+        assertEquals(profileResponseDto.profileId, profileId)
+    }
+
+    @Test
+    fun failDeleteProfile_noProfile() {
+        val exception = assertThrows(BadRequestException::class.java) {
+            // given
+            every {
+                profileRepository.findById(profileId)
+            } returns null
+            // when
+            profileService.deleteProfile(profileId)
+        }
+        // then
+        assertEquals(ErrorCode.ROW_DOES_NOT_EXIST, exception.errorCode)
+    }
+
+    @Test
+    fun failDeleteProfile_alreadyDeleted() {
+        val exception = assertThrows(BadRequestException::class.java) {
+            // given
+            every {
+                profileRepository.findById(profileId)
+            } returns profileAlreadyDeleted
+            // when
+            profileService.deleteProfile(profileId)
+        }
+        // then
+        assertEquals(ErrorCode.ROW_ALREADY_DELETED, exception.errorCode)
+    }
+
+    @Test
     fun successCreateProfile() {
         // given
         every {
@@ -98,10 +137,10 @@ class ProfileServiceTest {
         } returns user
 
         // when
-        val profileCreateResponseDto = profileService.createProfile(profileCreateRequestDto, userId)
+        val profileResponseDto = profileService.createProfile(profileCreateRequestDto, userId)
 
         // then
-        assertEquals(profileCreateRequestDto.mainImage, profileCreateResponseDto.mainImage)
+        assertEquals(profileCreateRequestDto.mainImage, profileResponseDto.mainImage)
     }
 
     @Test
