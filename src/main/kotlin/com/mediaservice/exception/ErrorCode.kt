@@ -26,5 +26,4 @@ enum class ErrorCode(val code: Int) {
      * 503 Server Unavailable Error
      */
     UNAVAILABLE_MAIL_SERVER(50300)
-
 }

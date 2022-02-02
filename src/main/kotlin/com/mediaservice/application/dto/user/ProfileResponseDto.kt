@@ -5,7 +5,6 @@ import java.util.UUID
 
 data class ProfileResponseDto(
     val profileId: UUID,
-    val mainImage: String,
     val name: String,
     val mainImage: String,
     val rate: String

@@ -2,7 +2,6 @@ package com.mediaservice
 
 import com.mediaservice.application.ProfileService
 import com.mediaservice.application.dto.user.ProfileCreateRequestDto
-import com.mediaservice.application.dto.user.ProfileResponseDto
 import com.mediaservice.application.dto.user.SignInProfileResponseDto
 import com.mediaservice.domain.Profile
 import com.mediaservice.domain.Role
