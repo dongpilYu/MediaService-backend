@@ -16,7 +16,7 @@ object ProfileTable : UUIDTable("TB_PROFILE") {
 }
 
 class Profile(
-    var id: UUID,
+    var id: UUID?,
     var user: User,
     var name: String,
     var rate: String,
@@ -24,6 +24,8 @@ class Profile(
     var isDeleted: Boolean
 ) {
     companion object {
+        const val DOMAIN = "PROFILE"
+
         fun from(profileEntity: ProfileEntity) = Profile(
             id = profileEntity.id.value,
             user = User.from(profileEntity.user),
@@ -32,6 +34,21 @@ class Profile(
             mainImage = profileEntity.mainImage,
             isDeleted = profileEntity.isDeleted
         )
+
+        fun of(user: User, mainImage: String, rate: String, name: String) = Profile(
+            id = null,
+            user = user,
+            name = name,
+            rate = rate,
+            mainImage = mainImage,
+            isDeleted = false
+        )
+    }
+
+    fun update(name: String, mainImage: String, rate: String) {
+        this.name = name
+        this.mainImage = mainImage
+        this.rate = rate
     }
 }
 
