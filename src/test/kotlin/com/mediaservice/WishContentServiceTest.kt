@@ -55,7 +55,6 @@ class WishContentServiceTest {
         this.wishContentResponseDto = WishContentResponseDto(wishContentId, "action", "title", "synopsis", "terailer", "thumbnail", "rate", false)
     }
 
-
     @Test
     fun successCreate() {
         // given
@@ -87,5 +86,4 @@ class WishContentServiceTest {
         // then
         assertEquals(ErrorCode.ROW_ALREADY_EXIST, exception.errorCode)
     }
-
 }
