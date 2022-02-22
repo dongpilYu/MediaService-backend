@@ -3,6 +3,7 @@ package com.mediaservice
 import com.mediaservice.domain.*
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import com.mediaservice.infrastructure.AppInitiator
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
@@ -28,5 +29,6 @@ fun main(args: Array<String>) {
                 UserTable, ProfileTable, MediaTable, MediaSeriesTable, MediaAllSeriesTable, ActorTable, CreatorTable, GenreTable, WishContentTable
             )
         }
+        AppInitiator.localInit()
     }
 }

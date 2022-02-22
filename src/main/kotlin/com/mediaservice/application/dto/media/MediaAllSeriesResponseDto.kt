@@ -1,8 +1,10 @@
 package com.mediaservice.application.dto.media
 
 import com.mediaservice.domain.MediaAllSeries
+import java.util.UUID
 
 data class MediaAllSeriesResponseDto(
+    val id: UUID,
     val title: String,
     val synopsis: String,
     val trailer: String,
@@ -12,6 +14,7 @@ data class MediaAllSeriesResponseDto(
 ) {
     companion object {
         fun from(mediaAllSeries: MediaAllSeries) = MediaAllSeriesResponseDto(
+            id = mediaAllSeries.id,
             title = mediaAllSeries.title,
             synopsis = mediaAllSeries.synopsis,
             trailer = mediaAllSeries.trailer,
