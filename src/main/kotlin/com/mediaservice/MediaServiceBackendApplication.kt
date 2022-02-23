@@ -1,9 +1,6 @@
 package com.mediaservice
 
 import com.mediaservice.infrastructure.AppInitiator
-import com.mediaservice.domain.*
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 

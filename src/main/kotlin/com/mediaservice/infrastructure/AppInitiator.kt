@@ -71,8 +71,8 @@ class AppInitiator {
                 }
 
                 for (i in mediaAllSeriesIds) {
-                    for (j in profileIds){
-                        WishContentTable.insert{
+                    for (j in profileIds) {
+                        WishContentTable.insert {
                             it[mediaAllSeries] = i
                             it[profile] = j
                             it[isDeleted] = false
