@@ -1,6 +1,14 @@
 package com.mediaservice
 
-import com.mediaservice.domain.*
+import com.mediaservice.infrastructure.AppInitiator
+import com.mediaservice.domain.ActorTable
+import com.mediaservice.domain.CreatorTable
+import com.mediaservice.domain.GenreTable
+import com.mediaservice.domain.MediaAllSeriesTable
+import com.mediaservice.domain.MediaSeriesTable
+import com.mediaservice.domain.MediaTable
+import com.mediaservice.domain.ProfileTable
+import com.mediaservice.domain.UserTable
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -22,11 +30,12 @@ fun main(args: Array<String>) {
     if (System.getProperty("spring.profiles.active") == "local") {
         transaction {
             SchemaUtils.drop(
-                UserTable, ProfileTable, MediaTable, MediaSeriesTable, MediaAllSeriesTable, ActorTable, CreatorTable, GenreTable, WishContentTable
+                UserTable, ProfileTable, MediaTable, MediaSeriesTable, MediaAllSeriesTable, ActorTable, CreatorTable, GenreTable
             )
             SchemaUtils.create(
-                UserTable, ProfileTable, MediaTable, MediaSeriesTable, MediaAllSeriesTable, ActorTable, CreatorTable, GenreTable, WishContentTable
+                UserTable, ProfileTable, MediaTable, MediaSeriesTable, MediaAllSeriesTable, ActorTable, CreatorTable, GenreTable
             )
         }
+        AppInitiator.localInit()
     }
 }
