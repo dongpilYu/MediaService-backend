@@ -1,14 +1,7 @@
 package com.mediaservice
 
 import com.mediaservice.infrastructure.AppInitiator
-import com.mediaservice.domain.ActorTable
-import com.mediaservice.domain.CreatorTable
-import com.mediaservice.domain.GenreTable
-import com.mediaservice.domain.MediaAllSeriesTable
-import com.mediaservice.domain.MediaSeriesTable
-import com.mediaservice.domain.MediaTable
-import com.mediaservice.domain.ProfileTable
-import com.mediaservice.domain.UserTable
+import com.mediaservice.domain.*
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.springframework.boot.autoconfigure.SpringBootApplication
