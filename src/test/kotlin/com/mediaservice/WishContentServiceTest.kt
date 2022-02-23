@@ -2,11 +2,7 @@ package com.mediaservice
 
 import com.mediaservice.application.WishContentService
 import com.mediaservice.application.dto.media.WishContentResponseDto
-import com.mediaservice.domain.MediaAllSeries
-import com.mediaservice.domain.Profile
-import com.mediaservice.domain.Role
-import com.mediaservice.domain.User
-import com.mediaservice.domain.WishContent
+import com.mediaservice.domain.*
 import com.mediaservice.domain.repository.MediaAllSeriesRepository
 import com.mediaservice.domain.repository.ProfileRepository
 import com.mediaservice.domain.repository.WishContentRepository
@@ -38,6 +34,10 @@ class WishContentServiceTest {
     private lateinit var mediaAllSeries: MediaAllSeries
 
     private lateinit var wishContentResponseDto: WishContentResponseDto
+    private lateinit var actorList: List<Actor>
+    private lateinit var genreList: List<Genre>
+    private lateinit var creatorList: List<Creator>
+
 
     @BeforeEach
     fun setup() {
@@ -47,9 +47,16 @@ class WishContentServiceTest {
         this.userId = UUID.randomUUID()
         this.wishContentId = UUID.randomUUID()
 
+        this.actorList = listOf(Actor(UUID.randomUUID(), "testActor", false))
+        this.genreList = listOf(Genre(UUID.randomUUID(), "testGenre", false))
+        this.creatorList = listOf(Creator(UUID.randomUUID(), "testCreator", false))
+
         this.user = User(userId, "user@gmail.com", "1234", Role.USER)
         this.profile = Profile(profileId, user, "action", "19+", "image_url", false)
-        this.mediaAllSeries = MediaAllSeries(mediaAllSeriesId, "title", "synopsis", "trailer", "thumbnail", "rate", false)
+        this.mediaAllSeries = MediaAllSeries(
+                mediaAllSeriesId, "title", "synopsis", "trailer",
+                "test thumbnail url", "19+", false, false, this.actorList, this.genreList, this.creatorList
+        )
         this.wishContent = WishContent(wishContentId, mediaAllSeries, profile, false)
 
         this.wishContentResponseDto = WishContentResponseDto(wishContentId, "action", "title", "synopsis", "terailer", "thumbnail", "rate", false)
