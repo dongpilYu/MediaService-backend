@@ -28,14 +28,6 @@ fun main(args: Array<String>) {
     runApplication<MediaServiceBackendApplication>(*args)
 
     if (System.getProperty("spring.profiles.active") == "local") {
-        transaction {
-            SchemaUtils.drop(
-                UserTable, ProfileTable, MediaTable, MediaSeriesTable, MediaAllSeriesTable, ActorTable, CreatorTable, GenreTable
-            )
-            SchemaUtils.create(
-                UserTable, ProfileTable, MediaTable, MediaSeriesTable, MediaAllSeriesTable, ActorTable, CreatorTable, GenreTable
-            )
-        }
         AppInitiator.localInit()
     }
 }
