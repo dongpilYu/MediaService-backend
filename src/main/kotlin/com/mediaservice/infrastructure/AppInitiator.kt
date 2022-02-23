@@ -1,18 +1,6 @@
 package com.mediaservice.infrastructure
 
-import com.mediaservice.domain.ActorTable
-import com.mediaservice.domain.CreatorTable
-import com.mediaservice.domain.GenreTable
-import com.mediaservice.domain.LikeTable
-import com.mediaservice.domain.MediaAllSeriesActorTable
-import com.mediaservice.domain.MediaAllSeriesCreatorTable
-import com.mediaservice.domain.MediaAllSeriesGenreTable
-import com.mediaservice.domain.MediaAllSeriesTable
-import com.mediaservice.domain.MediaSeriesTable
-import com.mediaservice.domain.MediaTable
-import com.mediaservice.domain.ProfileTable
-import com.mediaservice.domain.Role
-import com.mediaservice.domain.UserTable
+import com.mediaservice.domain.*
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
@@ -27,12 +15,12 @@ class AppInitiator {
                 SchemaUtils.drop(
                     UserTable, ProfileTable, MediaTable, MediaSeriesTable, MediaAllSeriesTable,
                     ActorTable, CreatorTable, GenreTable, MediaAllSeriesActorTable, MediaAllSeriesGenreTable,
-                    MediaAllSeriesCreatorTable, LikeTable
+                    MediaAllSeriesCreatorTable, LikeTable, WishContentTable
                 )
                 SchemaUtils.create(
                     UserTable, ProfileTable, MediaTable, MediaSeriesTable, MediaAllSeriesTable,
                     ActorTable, CreatorTable, GenreTable, MediaAllSeriesActorTable, MediaAllSeriesGenreTable,
-                    MediaAllSeriesCreatorTable, LikeTable
+                    MediaAllSeriesCreatorTable, LikeTable, WishContentTable
                 )
 
                 UserTable.insert {
@@ -52,15 +40,18 @@ class AppInitiator {
                     )
                 }
 
+                var profileIds = ArrayList<UUID>()
                 for (i in userIds) {
                     for (j in 1..3) {
-                        ProfileTable.insert {
-                            it[user_id] = i
-                            it[name] = "프로필 $j"
-                            it[rate] = "19+"
-                            it[mainImage] = "프로필 ${j}의 메인 이미지"
-                            it[isDeleted] = false
-                        }
+                        profileIds.add(
+                            ProfileTable.insertAndGetId {
+                                it[user_id] = i
+                                it[name] = "프로필 $j"
+                                it[rate] = "19+"
+                                it[mainImage] = "프로필 ${j}의 메인 이미지"
+                                it[isDeleted] = false
+                            }.value
+                        )
                     }
                 }
 
@@ -77,6 +68,16 @@ class AppInitiator {
                             it[isDeleted] = false
                         }.value
                     )
+                }
+
+                for (i in mediaAllSeriesIds) {
+                    for (j in profileIds){
+                        WishContentTable.insert{
+                            it[mediaAllSeries] = i
+                            it[profile] = j
+                            it[isDeleted] = false
+                        }
+                    }
                 }
 
                 var mediaSeriesIds = ArrayList<UUID>()
