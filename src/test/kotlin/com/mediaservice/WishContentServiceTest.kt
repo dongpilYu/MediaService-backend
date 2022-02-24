@@ -73,7 +73,7 @@ class WishContentServiceTest {
         // given
         every { mediaAllSeriesRepository.findById(mediaAllSeriesId) } returns mediaAllSeries
         every { profileRepository.findById(profileId) } returns profile
-        every { wishContentRepository.alreadyInserted(profileId, mediaAllSeriesId) } returns false
+        every { wishContentRepository.findByProfileIdAndMediaAllSeriesId(profileId, mediaAllSeriesId) } returns false
         every { wishContentRepository.save(any()) } returns wishContent
 
         // when
@@ -89,7 +89,7 @@ class WishContentServiceTest {
             // given
             every { mediaAllSeriesRepository.findById(mediaAllSeriesId) } returns mediaAllSeries
             every { profileRepository.findById(profileId) } returns profile
-            every { wishContentRepository.alreadyInserted(profileId, mediaAllSeriesId) } returns true
+            every { wishContentRepository.findByProfileIdAndMediaAllSeriesId(profileId, mediaAllSeriesId) } returns true
             every { wishContentRepository.save(any()) } returns wishContent
 
             // when
