@@ -13,6 +13,7 @@ import com.mediaservice.domain.MediaTable
 import com.mediaservice.domain.ProfileTable
 import com.mediaservice.domain.Role
 import com.mediaservice.domain.UserTable
+import com.mediaservice.domain.WishContentTable
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
@@ -27,12 +28,12 @@ class AppInitiator {
                 SchemaUtils.drop(
                     UserTable, ProfileTable, MediaTable, MediaSeriesTable, MediaAllSeriesTable,
                     ActorTable, CreatorTable, GenreTable, MediaAllSeriesActorTable, MediaAllSeriesGenreTable,
-                    MediaAllSeriesCreatorTable, LikeTable
+                    MediaAllSeriesCreatorTable, LikeTable, WishContentTable
                 )
                 SchemaUtils.create(
                     UserTable, ProfileTable, MediaTable, MediaSeriesTable, MediaAllSeriesTable,
                     ActorTable, CreatorTable, GenreTable, MediaAllSeriesActorTable, MediaAllSeriesGenreTable,
-                    MediaAllSeriesCreatorTable, LikeTable
+                    MediaAllSeriesCreatorTable, LikeTable, WishContentTable
                 )
 
                 UserTable.insert {
@@ -41,7 +42,7 @@ class AppInitiator {
                     it[role] = Role.ADMIN
                 }
 
-                var userIds = ArrayList<UUID>()
+                val userIds = ArrayList<UUID>()
                 for (i in 1..5) {
                     userIds.add(
                         UserTable.insertAndGetId {
@@ -52,19 +53,22 @@ class AppInitiator {
                     )
                 }
 
+                val profileIds = ArrayList<UUID>()
                 for (i in userIds) {
                     for (j in 1..3) {
-                        ProfileTable.insert {
-                            it[user_id] = i
-                            it[name] = "프로필 $j"
-                            it[rate] = "19+"
-                            it[mainImage] = "프로필 ${j}의 메인 이미지"
-                            it[isDeleted] = false
-                        }
+                        profileIds.add(
+                            ProfileTable.insertAndGetId {
+                                it[user_id] = i
+                                it[name] = "프로필 $j"
+                                it[rate] = "19+"
+                                it[mainImage] = "프로필 ${j}의 메인 이미지"
+                                it[isDeleted] = false
+                            }.value
+                        )
                     }
                 }
 
-                var mediaAllSeriesIds = ArrayList<UUID>()
+                val mediaAllSeriesIds = ArrayList<UUID>()
                 for (i in 1..15) {
                     mediaAllSeriesIds.add(
                         MediaAllSeriesTable.insertAndGetId {
@@ -79,7 +83,17 @@ class AppInitiator {
                     )
                 }
 
-                var mediaSeriesIds = ArrayList<UUID>()
+                for (i in mediaAllSeriesIds) {
+                    for (j in profileIds) {
+                        WishContentTable.insert {
+                            it[mediaAllSeries] = i
+                            it[profile] = j
+                            it[isDeleted] = false
+                        }
+                    }
+                }
+
+                val mediaSeriesIds = ArrayList<UUID>()
                 for (i in 1..15) {
                     for (j in 1..2) {
                         mediaSeriesIds.add(
@@ -115,7 +129,7 @@ class AppInitiator {
                     "공포", "미스터리", "애니메이션"
                 )
 
-                var genreIds = ArrayList<UUID>()
+                val genreIds = ArrayList<UUID>()
                 for (i in genreData) {
                     genreIds.add(
                         GenreTable.insertAndGetId {
@@ -130,7 +144,7 @@ class AppInitiator {
                     "유동필", "이민수"
                 )
 
-                var actorIds = ArrayList<UUID>()
+                val actorIds = ArrayList<UUID>()
                 for (i in actorData) {
                     actorIds.add(
                         ActorTable.insertAndGetId {
@@ -144,7 +158,7 @@ class AppInitiator {
                     "봉준호", "스필버그", "박찬욱", "홍상수", "이병헌"
                 )
 
-                var creatorIds = ArrayList<UUID>()
+                val creatorIds = ArrayList<UUID>()
                 for (i in creatorData) {
                     creatorIds.add(
                         CreatorTable.insertAndGetId {
