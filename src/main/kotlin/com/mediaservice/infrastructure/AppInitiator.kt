@@ -1,6 +1,19 @@
 package com.mediaservice.infrastructure
 
-import com.mediaservice.domain.*
+import com.mediaservice.domain.ActorTable
+import com.mediaservice.domain.CreatorTable
+import com.mediaservice.domain.GenreTable
+import com.mediaservice.domain.LikeTable
+import com.mediaservice.domain.MediaAllSeriesActorTable
+import com.mediaservice.domain.MediaAllSeriesCreatorTable
+import com.mediaservice.domain.MediaAllSeriesGenreTable
+import com.mediaservice.domain.MediaAllSeriesTable
+import com.mediaservice.domain.MediaSeriesTable
+import com.mediaservice.domain.MediaTable
+import com.mediaservice.domain.ProfileTable
+import com.mediaservice.domain.Role
+import com.mediaservice.domain.UserTable
+import com.mediaservice.domain.WishContentTable
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.insertAndGetId
@@ -29,7 +42,7 @@ class AppInitiator {
                     it[role] = Role.ADMIN
                 }
 
-                var userIds = ArrayList<UUID>()
+                val userIds = ArrayList<UUID>()
                 for (i in 1..5) {
                     userIds.add(
                         UserTable.insertAndGetId {
@@ -40,7 +53,7 @@ class AppInitiator {
                     )
                 }
 
-                var profileIds = ArrayList<UUID>()
+                val profileIds = ArrayList<UUID>()
                 for (i in userIds) {
                     for (j in 1..3) {
                         profileIds.add(
@@ -55,7 +68,7 @@ class AppInitiator {
                     }
                 }
 
-                var mediaAllSeriesIds = ArrayList<UUID>()
+                val mediaAllSeriesIds = ArrayList<UUID>()
                 for (i in 1..15) {
                     mediaAllSeriesIds.add(
                         MediaAllSeriesTable.insertAndGetId {
@@ -80,7 +93,7 @@ class AppInitiator {
                     }
                 }
 
-                var mediaSeriesIds = ArrayList<UUID>()
+                val mediaSeriesIds = ArrayList<UUID>()
                 for (i in 1..15) {
                     for (j in 1..2) {
                         mediaSeriesIds.add(
@@ -116,7 +129,7 @@ class AppInitiator {
                     "공포", "미스터리", "애니메이션"
                 )
 
-                var genreIds = ArrayList<UUID>()
+                val genreIds = ArrayList<UUID>()
                 for (i in genreData) {
                     genreIds.add(
                         GenreTable.insertAndGetId {
@@ -131,7 +144,7 @@ class AppInitiator {
                     "유동필", "이민수"
                 )
 
-                var actorIds = ArrayList<UUID>()
+                val actorIds = ArrayList<UUID>()
                 for (i in actorData) {
                     actorIds.add(
                         ActorTable.insertAndGetId {
@@ -145,7 +158,7 @@ class AppInitiator {
                     "봉준호", "스필버그", "박찬욱", "홍상수", "이병헌"
                 )
 
-                var creatorIds = ArrayList<UUID>()
+                val creatorIds = ArrayList<UUID>()
                 for (i in creatorData) {
                     creatorIds.add(
                         CreatorTable.insertAndGetId {
