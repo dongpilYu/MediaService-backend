@@ -22,7 +22,7 @@ class WishContentRepository {
         return wishContent
     }
 
-    fun alreadyInserted(profileId: UUID, mediaAllSeriesId: UUID): Boolean {
+    fun findByProfileIdAndMediaAllSeriesId(profileId: UUID, mediaAllSeriesId: UUID): Boolean {
         return !WishContentEntity.find {
             WishContentTable.profile eq profileId and (WishContentTable.mediaAllSeries eq mediaAllSeriesId) and (WishContentTable.isDeleted eq false)
         }.empty()

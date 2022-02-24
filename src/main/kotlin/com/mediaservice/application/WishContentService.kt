@@ -25,7 +25,7 @@ class WishContentService(
         val profile = profileRepository.findById(profileId)
             ?: throw BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH USER $profileId")
 
-        if (wishContentRepository.alreadyInserted(profileId, mediaAllSeriesId))
+        if (wishContentRepository.findByProfileIdAndMediaAllSeriesId(profileId, mediaAllSeriesId))
             throw BadRequestException(ErrorCode.ROW_ALREADY_EXIST, "$mediaAllSeriesId is Already Inserted in $profileId")
 
         return WishContentResponseDto.from(
