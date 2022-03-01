@@ -1,5 +1,6 @@
 package com.mediaservice.application
 
+import com.mediaservice.application.dto.media.WishContentRequestDto
 import com.mediaservice.application.dto.media.WishContentResponseDto
 import com.mediaservice.domain.WishContent
 import com.mediaservice.domain.repository.MediaAllSeriesRepository
@@ -19,7 +20,8 @@ class WishContentService(
 ) {
 
     @Transactional
-    fun deleteWishContent(profileId: UUID, mediaAllSeriesId: UUID): List<WishContentResponseDto> {
+    fun deleteWishContent(wishContentRequestDto: WishContentRequestDto, profileId: UUID): List<WishContentResponseDto> {
+        val mediaAllSeriesId = wishContentRequestDto.mediaAllSeriesId
         val mediaAllSeries = mediaAllSeriesRepository.findById(mediaAllSeriesId)
             ?: throw BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH USER $mediaAllSeriesId")
         val profile = profileRepository.findById(profileId)

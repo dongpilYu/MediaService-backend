@@ -1,6 +1,7 @@
 package com.mediaservice
 
 import com.mediaservice.application.WishContentService
+import com.mediaservice.application.dto.media.WishContentRequestDto
 import com.mediaservice.application.dto.media.WishContentResponseDto
 import com.mediaservice.domain.Actor
 import com.mediaservice.domain.Creator
@@ -40,6 +41,7 @@ class WishContentServiceTest {
     private lateinit var wishContent: WishContent
     private lateinit var mediaAllSeries: MediaAllSeries
 
+    private lateinit var wishContentRequestDto: WishContentRequestDto
     private lateinit var wishContentResponseDto: WishContentResponseDto
     private lateinit var actorList: List<Actor>
     private lateinit var genreList: List<Genre>
@@ -65,6 +67,7 @@ class WishContentServiceTest {
         )
         this.wishContent = WishContent(wishContentId, mediaAllSeries, profile, false)
 
+        this.wishContentRequestDto = WishContentRequestDto(mediaAllSeriesId)
         this.wishContentResponseDto = WishContentResponseDto(wishContentId, "action", "title", "synopsis", "terailer", "thumbnail", "rate", false)
     }
 
@@ -77,7 +80,7 @@ class WishContentServiceTest {
         every { wishContentRepository.delete(any()) } returns listOf(wishContent)
 
         // when
-        val wishContentResponseDtoList = this.wishContentService.deleteWishContent(profileId, mediaAllSeriesId)
+        val wishContentResponseDtoList = this.wishContentService.deleteWishContent(wishContentRequestDto, profileId)
 
         // then
         assertEquals(wishContentResponseDtoList.get(0).profileName, wishContent.profile.name)
@@ -93,7 +96,7 @@ class WishContentServiceTest {
             every { wishContentRepository.save(any()) } returns wishContent
 
             // when
-            this.wishContentService.deleteWishContent(profileId, mediaAllSeriesId)
+            this.wishContentService.deleteWishContent(wishContentRequestDto, profileId)
         }
         // then
         assertEquals(ErrorCode.ROW_DOES_NOT_EXIST, exception.errorCode)
@@ -109,7 +112,7 @@ class WishContentServiceTest {
             every { wishContentRepository.save(any()) } returns wishContent
 
             // when
-            this.wishContentService.deleteWishContent(profileId, mediaAllSeriesId)
+            this.wishContentService.deleteWishContent(wishContentRequestDto, profileId)
         }
         // then
         assertEquals(ErrorCode.ROW_DOES_NOT_EXIST, exception.errorCode)
