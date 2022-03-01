@@ -1,6 +1,7 @@
 package com.mediaservice
 
 import com.mediaservice.application.WishContentService
+import com.mediaservice.application.dto.media.WishContentRequestDto
 import com.mediaservice.application.dto.media.WishContentResponseDto
 import com.mediaservice.domain.Actor
 import com.mediaservice.domain.Creator
@@ -40,6 +41,7 @@ class WishContentServiceTest {
     private lateinit var wishContent: WishContent
     private lateinit var mediaAllSeries: MediaAllSeries
 
+    private lateinit var wishContentRequestDto: WishContentRequestDto
     private lateinit var wishContentResponseDto: WishContentResponseDto
     private lateinit var actorList: List<Actor>
     private lateinit var genreList: List<Genre>
@@ -65,6 +67,7 @@ class WishContentServiceTest {
         )
         this.wishContent = WishContent(wishContentId, mediaAllSeries, profile, false)
 
+        this.wishContentRequestDto = WishContentRequestDto(mediaAllSeriesId)
         this.wishContentResponseDto = WishContentResponseDto(wishContentId, "action", "title", "synopsis", "terailer", "thumbnail", "rate", false)
     }
 
@@ -73,11 +76,11 @@ class WishContentServiceTest {
         // given
         every { mediaAllSeriesRepository.findById(mediaAllSeriesId) } returns mediaAllSeries
         every { profileRepository.findById(profileId) } returns profile
-        every { wishContentRepository.findByProfileIdAndMediaAllSeriesId(profileId, mediaAllSeriesId) } returns false
+        every { wishContentRepository.existsByProfileIdAndMediaAllSeriesId(profileId, mediaAllSeriesId) } returns false
         every { wishContentRepository.save(any()) } returns wishContent
 
         // when
-        val wishContentResponseDto = this.wishContentService.createWishContent(profileId, mediaAllSeriesId)
+        val wishContentResponseDto = this.wishContentService.createWishContent(wishContentRequestDto, profileId)
 
         // then
         assertEquals(wishContentResponseDto.profileName, wishContent.profile.name)
@@ -89,11 +92,11 @@ class WishContentServiceTest {
             // given
             every { mediaAllSeriesRepository.findById(mediaAllSeriesId) } returns mediaAllSeries
             every { profileRepository.findById(profileId) } returns profile
-            every { wishContentRepository.findByProfileIdAndMediaAllSeriesId(profileId, mediaAllSeriesId) } returns true
+            every { wishContentRepository.existsByProfileIdAndMediaAllSeriesId(profileId, mediaAllSeriesId) } returns true
             every { wishContentRepository.save(any()) } returns wishContent
 
             // when
-            this.wishContentService.createWishContent(profileId, mediaAllSeriesId)
+            this.wishContentService.createWishContent(wishContentRequestDto, profileId)
         }
 
         // then

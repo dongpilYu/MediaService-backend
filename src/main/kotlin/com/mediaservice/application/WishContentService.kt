@@ -1,5 +1,6 @@
 package com.mediaservice.application
 
+import com.mediaservice.application.dto.media.WishContentRequestDto
 import com.mediaservice.application.dto.media.WishContentResponseDto
 import com.mediaservice.domain.WishContent
 import com.mediaservice.domain.repository.MediaAllSeriesRepository
@@ -19,13 +20,14 @@ class WishContentService(
 ) {
 
     @Transactional
-    fun createWishContent(profileId: UUID, mediaAllSeriesId: UUID): WishContentResponseDto {
-        val mediaAllSeries = mediaAllSeriesRepository.findById(mediaAllSeriesId)
+    fun createWishContent(wishContentRequestDto: WishContentRequestDto, profileId: UUID): WishContentResponseDto {
+        val mediaAllSeriesId = wishContentRequestDto.mediaAllSeriesId
+        val mediaAllSeries = mediaAllSeriesRepository.findById(wishContentRequestDto.mediaAllSeriesId)
             ?: throw BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH USER $mediaAllSeriesId")
         val profile = profileRepository.findById(profileId)
             ?: throw BadRequestException(ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH USER $profileId")
 
-        if (wishContentRepository.findByProfileIdAndMediaAllSeriesId(profileId, mediaAllSeriesId))
+        if (wishContentRepository.existsByProfileIdAndMediaAllSeriesId(profileId, mediaAllSeriesId))
             throw BadRequestException(ErrorCode.ROW_ALREADY_EXIST, "$mediaAllSeriesId is Already Inserted in $profileId")
 
         return WishContentResponseDto.from(
