@@ -7,19 +7,19 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.Column
 import java.util.UUID
 
-object MediaSeriesTable : UUIDTable(name = "TB_MEDIASERIES") {
+object MediaSeriesTable : UUIDTable(name = "TB_MEDIA_SERIES") {
     val title: Column<String> = varchar("title", 255)
     val order: Column<Int> = integer("order")
     val isDeleted: Column<Boolean> = bool("isDeleted")
-    val mediaAllSeries = reference("media_all_series", MediaAllSeriesTable)
+    val mediaContents = reference("media_contents", MediaContentsTable)
 }
 
 class MediaSeries(
-    var id: UUID,
+    var id: UUID?,
     var title: String,
     var order: Int,
     var isDeleted: Boolean,
-    var mediaAllSeries: MediaAllSeries
+    var mediaContents: MediaContents
 ) {
     companion object {
         fun from(mediaSeriesEntity: MediaSeriesEntity) = MediaSeries(
@@ -27,7 +27,15 @@ class MediaSeries(
             title = mediaSeriesEntity.title,
             order = mediaSeriesEntity.order,
             isDeleted = mediaSeriesEntity.isDeleted,
-            mediaAllSeries = MediaAllSeries.from(mediaSeriesEntity.mediaAllSeries)
+            mediaContents = MediaContents.from(mediaSeriesEntity.mediaContents)
+        )
+
+        fun of(title: String, order: Int, mediaContents: MediaContents) = MediaSeries(
+            id = null,
+            title = title,
+            order = order,
+            isDeleted = false,
+            mediaContents = mediaContents
         )
     }
 }
@@ -38,5 +46,5 @@ class MediaSeriesEntity(id: EntityID<UUID>) : UUIDEntity(id) {
     var title by MediaSeriesTable.title
     var order by MediaSeriesTable.order
     var isDeleted by MediaSeriesTable.isDeleted
-    var mediaAllSeries by MediaAllSeriesEntity referencedOn MediaSeriesTable.mediaAllSeries
+    var mediaContents by MediaContentsEntity referencedOn MediaSeriesTable.mediaContents
 }
