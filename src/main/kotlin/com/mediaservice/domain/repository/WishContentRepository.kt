@@ -13,7 +13,7 @@ class WishContentRepository {
     fun save(wishContent: WishContent): WishContent {
 
         val wishContentId = WishContentTable.insertAndGetId {
-            it[mediaAllSeries] = wishContent.mediaAllSeries.id
+            it[mediaContents] = wishContent.mediaContents.id
             it[profile] = wishContent.profile.id
             it[isDeleted] = false
         }
@@ -24,7 +24,7 @@ class WishContentRepository {
 
     fun existsByProfileIdAndMediaAllSeriesId(profileId: UUID, mediaAllSeriesId: UUID): Boolean {
         return !WishContentEntity.find {
-            WishContentTable.profile eq profileId and (WishContentTable.mediaAllSeries eq mediaAllSeriesId) and (WishContentTable.isDeleted eq false)
+            WishContentTable.profile eq profileId and (WishContentTable.mediaContents eq mediaAllSeriesId) and (WishContentTable.isDeleted eq false)
         }.empty()
     }
 }
