@@ -69,7 +69,7 @@ class AppInitiator {
                     }
                 }
 
-                var mediaAllSeriesIds = ArrayList<UUID>()
+                val mediaContentsIds = ArrayList<UUID>()
                 for (i in 1..15) {
                     mediaContentsIds.add(
                         MediaContentsTable.insertAndGetId {
@@ -84,7 +84,7 @@ class AppInitiator {
                     )
                 }
 
-                var mediaSeriesIds = ArrayList<UUID>()
+                val mediaSeriesIds = ArrayList<UUID>()
                 for (i in 1..15) {
                     for (j in 1..2) {
                         mediaSeriesIds.add(

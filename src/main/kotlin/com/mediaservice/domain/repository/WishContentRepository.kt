@@ -31,13 +31,12 @@ class WishContentRepository {
     fun existsByProfileIdAndMediaAllSeriesId(profileId: UUID, mediaAllSeriesId: UUID): Boolean {
         return !WishContentEntity.find {
             WishContentTable.profile eq profileId and (WishContentTable.mediaContents eq mediaAllSeriesId) and (WishContentTable.isDeleted eq false)
-        }
+        }.empty()
     }
-
 
     fun delete(wishContent: WishContent): List<WishContent> {
         return WishContentEntity.find {
-            WishContentTable.profile eq wishContent.profile.id and (WishContentTable.mediaAllSeries eq wishContent.mediaAllSeries.id) and (WishContentTable.isDeleted eq false)
+            WishContentTable.profile eq wishContent.profile.id and (WishContentTable.mediaContents eq wishContent.mediaContents.id) and (WishContentTable.isDeleted eq false)
         }?.map {
             it.isDeleted = true
             WishContent.from(it)
@@ -46,7 +45,7 @@ class WishContentRepository {
 
     fun findByProfileIdAndMediaAllSeriesId(profileId: UUID, mediaAllSeriesId: UUID): Boolean {
         return !WishContentEntity.find {
-            WishContentTable.profile eq profileId and (WishContentTable.mediaAllSeries eq mediaAllSeriesId) and (WishContentTable.isDeleted eq false)
+            WishContentTable.profile eq profileId and (WishContentTable.mediaContents eq mediaAllSeriesId) and (WishContentTable.isDeleted eq false)
         }.empty()
     }
 }
