@@ -9,6 +9,7 @@ import com.mediaservice.domain.Genre
 import com.mediaservice.domain.repository.GenreRepository
 import com.mediaservice.exception.BadRequestException
 import com.mediaservice.exception.ErrorCode
+import com.mediaservice.exception.InternalServerException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
@@ -41,6 +42,24 @@ class GenreService(
             this.genreRepository.update(
                 id,
                 genreForUpdate
+            ) ?: throw InternalServerException(
+                ErrorCode.INTERNAL_SERVER, "GENRE IS CHECKED, BUT EXCEPTION OCCURS"
+            )
+        )
+    }
+
+    @Transactional
+    fun delete(id: UUID): GenreResponseDto {
+        val genreForUpdate = this.genreRepository.findById(id) ?: throw BadRequestException(
+            ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH GENRE $id"
+        )
+
+        val validator: Validator = IsDeletedValidator(genreForUpdate.isDeleted, Genre.DOMAIN)
+        validator.validate()
+
+        return GenreResponseDto.from(
+            this.genreRepository.delete(
+                id
             ) ?: throw BadRequestException(
                 ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH GENRE $id"
             )

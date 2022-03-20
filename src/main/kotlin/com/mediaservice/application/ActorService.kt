@@ -9,6 +9,7 @@ import com.mediaservice.domain.Actor
 import com.mediaservice.domain.repository.ActorRepository
 import com.mediaservice.exception.BadRequestException
 import com.mediaservice.exception.ErrorCode
+import com.mediaservice.exception.InternalServerException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
@@ -41,6 +42,24 @@ class ActorService(
             this.actorRepository.update(
                 id,
                 actorForUpdate
+            ) ?: throw InternalServerException(
+                ErrorCode.INTERNAL_SERVER, "ACTOR IS CHECKED, BUT EXCEPTION OCCURS"
+            )
+        )
+    }
+
+    @Transactional
+    fun delete(id: UUID): ActorResponseDto {
+        val actorForUpdate = this.actorRepository.findById(id) ?: throw BadRequestException(
+            ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH ACTOR $id"
+        )
+
+        val validator: Validator = IsDeletedValidator(actorForUpdate.isDeleted, Actor.DOMAIN)
+        validator.validate()
+
+        return ActorResponseDto.from(
+            this.actorRepository.delete(
+                id
             ) ?: throw BadRequestException(
                 ErrorCode.ROW_DOES_NOT_EXIST, "NO SUCH ACTOR $id"
             )

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/v1/profiles")
@@ -26,17 +27,17 @@ class ProfileController(private val profileService: ProfileService) {
         return this.profileService.findById(id)
     }
 
-    @GetMapping("/sign-in/{id}")
-    fun findByUserId(@PathVariable id: UUID): List<SignInProfileResponseDto> {
-        return this.profileService.findByUserId(id)
+    @PostMapping("/sign-in")
+    fun findByUserId(@AuthenticationPrincipal id: String): List<SignInProfileResponseDto> {
+        return this.profileService.findByUserId(UUID.fromString(id))
     }
 
-    @PostMapping("/")
+    @PostMapping
     fun create(
-        @RequestBody profileCreateRequestDto: ProfileCreateRequestDto,
-        @AuthenticationPrincipal userId: String
+        @AuthenticationPrincipal userId: String,
+        @RequestBody @Valid profileCreateRequestDto: ProfileCreateRequestDto
     ): ProfileResponseDto? {
-        return profileService.create(profileCreateRequestDto, UUID.fromString(userId))
+        return profileService.create(UUID.fromString(userId), profileCreateRequestDto)
     }
 
     @DeleteMapping("/{id}")
@@ -51,7 +52,7 @@ class ProfileController(private val profileService: ProfileService) {
     fun update(
         @AuthenticationPrincipal userId: String,
         @PathVariable profileId: UUID,
-        @RequestBody profileUpdateRequestDto: ProfileUpdateRequestDto
+        @RequestBody @Valid profileUpdateRequestDto: ProfileUpdateRequestDto
     ): ProfileResponseDto? {
         return this.profileService.update(UUID.fromString(userId), profileId, profileUpdateRequestDto)
     }

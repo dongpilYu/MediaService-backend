@@ -4,10 +4,10 @@ import com.mediaservice.domain.ActorTable
 import com.mediaservice.domain.CreatorTable
 import com.mediaservice.domain.GenreTable
 import com.mediaservice.domain.LikeTable
-import com.mediaservice.domain.MediaAllSeriesActorTable
-import com.mediaservice.domain.MediaAllSeriesCreatorTable
-import com.mediaservice.domain.MediaAllSeriesGenreTable
-import com.mediaservice.domain.MediaAllSeriesTable
+import com.mediaservice.domain.MediaContentsActorTable
+import com.mediaservice.domain.MediaContentsCreatorTable
+import com.mediaservice.domain.MediaContentsGenreTable
+import com.mediaservice.domain.MediaContentsTable
 import com.mediaservice.domain.MediaSeriesTable
 import com.mediaservice.domain.MediaTable
 import com.mediaservice.domain.ProfileTable
@@ -26,14 +26,15 @@ class AppInitiator {
         fun localInit() {
             transaction {
                 SchemaUtils.drop(
-                    UserTable, ProfileTable, MediaTable, MediaSeriesTable, MediaAllSeriesTable,
-                    ActorTable, CreatorTable, GenreTable, MediaAllSeriesActorTable, MediaAllSeriesGenreTable,
-                    MediaAllSeriesCreatorTable, LikeTable, WishContentTable
+                    UserTable, ProfileTable, MediaTable, MediaSeriesTable, MediaContentsTable,
+                    ActorTable, CreatorTable, GenreTable, MediaContentsActorTable, MediaContentsGenreTable,
+                    MediaContentsTable, LikeTable, WishContentTable
                 )
                 SchemaUtils.create(
-                    UserTable, ProfileTable, MediaTable, MediaSeriesTable, MediaAllSeriesTable,
-                    ActorTable, CreatorTable, GenreTable, MediaAllSeriesActorTable, MediaAllSeriesGenreTable,
-                    MediaAllSeriesCreatorTable, LikeTable, WishContentTable
+                    UserTable, ProfileTable, MediaTable, MediaSeriesTable, MediaContentsTable,
+                    ActorTable, CreatorTable, GenreTable, MediaContentsActorTable, MediaContentsGenreTable,
+                    MediaContentsCreatorTable, LikeTable, WishContentTable
+
                 )
 
                 UserTable.insert {
@@ -68,10 +69,10 @@ class AppInitiator {
                     }
                 }
 
-                val mediaAllSeriesIds = ArrayList<UUID>()
+                var mediaAllSeriesIds = ArrayList<UUID>()
                 for (i in 1..15) {
-                    mediaAllSeriesIds.add(
-                        MediaAllSeriesTable.insertAndGetId {
+                    mediaContentsIds.add(
+                        MediaContentsTable.insertAndGetId {
                             it[title] = "전체 미디어 ${i}의 타이틀"
                             it[synopsis] = "전체 미디어 ${i}의 시놉시스"
                             it[trailer] = "전체 미디어 ${i}의 트레일러"
@@ -83,17 +84,7 @@ class AppInitiator {
                     )
                 }
 
-                for (i in mediaAllSeriesIds) {
-                    for (j in profileIds) {
-                        WishContentTable.insert {
-                            it[mediaAllSeries] = i
-                            it[profile] = j
-                            it[isDeleted] = false
-                        }
-                    }
-                }
-
-                val mediaSeriesIds = ArrayList<UUID>()
+                var mediaSeriesIds = ArrayList<UUID>()
                 for (i in 1..15) {
                     for (j in 1..2) {
                         mediaSeriesIds.add(
@@ -101,7 +92,7 @@ class AppInitiator {
                                 it[title] = "전체 미디어 ${i}의 시즌 $j"
                                 it[order] = j
                                 it[isDeleted] = false
-                                it[mediaAllSeries] = mediaAllSeriesIds[i - 1]
+                                it[mediaContents] = mediaContentsIds[i - 1]
                             }.value
                         )
                     }
@@ -124,7 +115,7 @@ class AppInitiator {
                     }
                 }
 
-                val genreData = listOf<String>(
+                val genreData = listOf(
                     "로맨스", "판타지", "스릴러", "코미디", "SF",
                     "공포", "미스터리", "애니메이션"
                 )
@@ -139,7 +130,7 @@ class AppInitiator {
                     )
                 }
 
-                val actorData = listOf<String>(
+                val actorData = listOf(
                     "고광표", "김민하", "김영민", "배진우", "우창혁",
                     "유동필", "이민수"
                 )
@@ -154,7 +145,7 @@ class AppInitiator {
                     )
                 }
 
-                val creatorData = listOf<String>(
+                val creatorData = listOf(
                     "봉준호", "스필버그", "박찬욱", "홍상수", "이병헌"
                 )
 
@@ -168,14 +159,14 @@ class AppInitiator {
                     )
                 }
 
-                for ((i, v) in mediaAllSeriesIds.withIndex()) {
+                for ((i, v) in mediaContentsIds.withIndex()) {
                     val actorList = List(3) {
                         actorIds.random()
                     }.toSet().toList()
 
                     for (j in actorList) {
-                        MediaAllSeriesActorTable.insert {
-                            it[mediaAllSeries] = v
+                        MediaContentsActorTable.insert {
+                            it[mediaContents] = v
                             it[actor] = j
                         }
                     }
@@ -185,15 +176,15 @@ class AppInitiator {
                     }.toSet().toList()
 
                     for (j in genreList) {
-                        MediaAllSeriesGenreTable.insert {
-                            it[mediaAllSeries] = v
+                        MediaContentsGenreTable.insert {
+                            it[mediaContents] = v
                             it[genre] = j
                         }
                     }
 
-                    MediaAllSeriesCreatorTable.insert {
-                        it[mediaAllSeries] = v
-                        it[creator] = creatorIds.get(i % creatorIds.size)
+                    MediaContentsCreatorTable.insert {
+                        it[mediaContents] = v
+                        it[creator] = creatorIds[i % creatorIds.size]
                     }
                 }
             }
