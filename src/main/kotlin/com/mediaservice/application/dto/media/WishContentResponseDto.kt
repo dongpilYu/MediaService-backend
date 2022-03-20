@@ -18,12 +18,12 @@ data class WishContentResponseDto(
         fun from(wishContent: WishContent) = WishContentResponseDto(
             id = wishContent.id!!,
             profileName = wishContent.profile.name,
-            title = wishContent.mediaAllSeries.title,
-            synopsis = wishContent.mediaAllSeries.synopsis,
-            trailer = wishContent.mediaAllSeries.trailer,
-            thumbnail = wishContent.mediaAllSeries.thumbnail,
-            rate = wishContent.mediaAllSeries.rate,
-            isSeries = wishContent.mediaAllSeries.isSeries
+            title = wishContent.mediaContents.title,
+            synopsis = wishContent.mediaContents.synopsis,
+            trailer = wishContent.mediaContents.trailer,
+            thumbnail = wishContent.mediaContents.thumbnail,
+            rate = wishContent.mediaContents.rate,
+            isSeries = wishContent.mediaContents.isSeries
         )
     }
 }

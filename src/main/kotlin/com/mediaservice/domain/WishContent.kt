@@ -9,26 +9,26 @@ import java.util.UUID
 
 object WishContentTable : UUIDTable("TB_WISHCONTENT") {
     val profile = reference("profile", ProfileTable)
-    val mediaAllSeries = reference("media_all_series", MediaAllSeriesTable)
+    val mediaContents = reference("mediaContents", MediaContentsTable)
     val isDeleted: Column<Boolean> = bool("isDeleted")
 }
 
 class WishContent(
     var id: UUID?,
-    var mediaAllSeries: MediaAllSeries,
+    var mediaContents: MediaContents,
     var profile: Profile,
     var isDeleted: Boolean
 ) {
     companion object {
         fun from(wishContentEntity: WishContentEntity) = WishContent(
             id = wishContentEntity.id.value,
-            mediaAllSeries = MediaAllSeries.from(wishContentEntity.mediaAllSeries),
+            mediaContents = MediaContents.from(wishContentEntity.mediaContents),
             profile = Profile.from(wishContentEntity.profile),
             isDeleted = false
         )
-        fun of(mediaAllSeries: MediaAllSeries, profile: Profile) = WishContent(
+        fun of(mediaContents: MediaContents, profile: Profile) = WishContent(
             id = null,
-            mediaAllSeries = mediaAllSeries,
+            mediaContents = mediaContents,
             profile = profile,
             isDeleted = false
         )
@@ -38,7 +38,7 @@ class WishContent(
 class WishContentEntity(id: EntityID<UUID>) : UUIDEntity(id) {
     companion object : UUIDEntityClass<WishContentEntity>(WishContentTable)
 
-    var mediaAllSeries by MediaAllSeriesEntity referencedOn WishContentTable.mediaAllSeries
+    var mediaContents by MediaContentsEntity referencedOn WishContentTable.mediaContents
     var profile by ProfileEntity referencedOn WishContentTable.profile
     var isDeleted by WishContentTable.isDeleted
 }
